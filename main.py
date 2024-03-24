@@ -1,23 +1,54 @@
 from tkinter import *
 from tkinter import messagebox
+from random import choice, randint, shuffle
+import pyperclip
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
+def generate_password():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+               'v',
+               'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+               'R',
+               'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+
+    password_letters = [choice(letters) for _ in range(randint(8, 10))]
+    password_numbers = [choice(numbers) for _ in range(randint(2, 4))]
+    password_symbol = [choice(symbols) for _ in range(randint(2, 4))]
+
+    password_list = password_letters + password_numbers + password_symbol
+
+    shuffle(password_list)
+
+    password = "".join(password_list)
+
+    if len(password_entry.get()) == 0:
+        password_entry.insert(0, password)
+        pyperclip.copy(password)
+    else:
+        pass
+
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
-    websit_value = website_entry.get()
+    website_value = website_entry.get()
     email_value = username_entry.get()
     password_value = password_entry.get()
-    messagebox.askokcancel(title=websit_value,
-                           message=f"These are the details entered: \nEmail: {email_value}\nPassword: {password_value}\nIs it ok to save?")
-    # messagebox.showinfo("Success", "Your data is saved.")
-
-    with open("data.txt", 'a') as file:
-        file.write(f"{websit_value} | {email_value} | {password_value}\n")
-    website_entry.delete(0, END)
-    # username_entry.delete(0, "end")
-    password_entry.delete(0, END)
+    if not website_value or not password_value:
+        messagebox.showinfo("Oops", "Please don't leave any fields empty")
+    else:
+        is_ok = messagebox.askokcancel(title=website_value,
+                                       message=f"These are the details entered:"
+                                               f" \nEmail: {email_value}\nPassword: {password_value}\nIs it ok to save?")
+        # messagebox.showinfo("Success", "Your data is saved.")
+        if is_ok:
+            with open("data.txt", 'a') as file:
+                file.write(f"{website_value} | {email_value} | {password_value}\n")
+            website_entry.delete(0, END)
+            # username_entry.delete(0, "end")
+            password_entry.delete(0, END)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -54,8 +85,8 @@ password_entry = Entry(width=36)
 password_entry.grid(row=3, column=1)
 
 # Buttons
-genetate_button = Button(text="Generate Password")
-genetate_button.grid(row=3, column=2)
+generate_button = Button(text="Generate Password", command=generate_password)
+generate_button.grid(row=3, column=2)
 
 add_button = Button(text="Add", width=46, command=save)
 add_button.grid(row=4, column=1, columnspan=2)
