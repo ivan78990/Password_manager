@@ -5,6 +5,17 @@ import pyperclip
 import json
 
 
+def find_password():
+    website_value = website_entry.get()
+    try:
+        with open('data.json', 'r') as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(f"{website_value}", "No Data File Found")
+    else:
+        messagebox.showinfo(f"{website_value}",
+                            f"Email: {data[website_value]["email"]}\n"
+                            f"Password: {data[website_value]["password"]}")
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
@@ -90,8 +101,8 @@ password_label = Label(text="Password:")
 password_label.grid(row=3, column=0)
 
 # Entries
-website_entry = Entry(width=55)
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry = Entry(width=36)
+website_entry.grid(row=1, column=1)
 website_entry.focus()
 
 username_entry = Entry(width=55)
@@ -107,5 +118,7 @@ generate_button.grid(row=3, column=2)
 
 add_button = Button(text="Add", width=46, command=save)
 add_button.grid(row=4, column=1, columnspan=2)
+search_button = Button(text="Search", width=14, command=find_password)
+search_button.grid(row=1, column=2)
 
 window.mainloop()
