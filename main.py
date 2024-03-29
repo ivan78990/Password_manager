@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from random import choice, randint, shuffle
 import pyperclip
+import json
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -36,16 +37,32 @@ def save():
     website_value = website_entry.get()
     email_value = username_entry.get()
     password_value = password_entry.get()
+    new_data = {
+        website_value: {
+            "email": email_value,
+            "password": password_value
+        }}
     if not website_value or not password_value:
         messagebox.showinfo("Oops", "Please don't leave any fields empty")
     else:
-        is_ok = messagebox.askokcancel(title=website_value,
-                                       message=f"These are the details entered:"
-                                               f" \nEmail: {email_value}\nPassword: {password_value}\nIs it ok to save?")
-        # messagebox.showinfo("Success", "Your data is saved.")
-        if is_ok:
-            with open("data.txt", 'a') as file:
-                file.write(f"{website_value} | {email_value} | {password_value}\n")
+        # is_ok = messagebox.askokcancel(title=website_value,
+        #                                message=f"These are the details entered:"
+        #                                        f" \nEmail: {email_value}\nPassword: {password_value}\nIs it ok to save?")
+        # # messagebox.showinfo("Success", "Your data is saved.")
+        # if is_ok:
+        try:
+            with open("data.json", 'r') as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            with open("data.json", "w") as data_file:
+                #Savin updated data
+                json.dump(new_data, data_file, indent=4)
+        else:
+            #Updating old data with new data
+            data.update(new_data)
+            with open("data.json", "w") as data_file:
+                json.dump(data, data_file, indent=4)
+        finally:
             website_entry.delete(0, END)
             # username_entry.delete(0, "end")
             password_entry.delete(0, END)
