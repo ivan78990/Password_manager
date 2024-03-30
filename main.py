@@ -13,13 +13,12 @@ def find_password():
     except FileNotFoundError:
         messagebox.showinfo(f"{website_value}", "No Data File Found")
     else:
-        try:
-            key = data[website_value]
-        except KeyError:
-            messagebox.showinfo(title=website_value, message=f"No info about {website_value}")
+        if website_value in data:
+            email = data[website_value]["email"]
+            password = data[website_value]["password"]
+            messagebox.showinfo(title=website_value, message=f"Email: {email}\nPassword: {password}")
         else:
-            messagebox.showinfo(title=website_value, message=f"Email: {key['email']}\nPassword: "
-                                                    f"{key['password']}")
+            messagebox.showinfo(title="Error", message=f"No data for {website_value} exists.")
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
