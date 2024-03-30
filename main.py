@@ -5,20 +5,6 @@ import pyperclip
 import json
 
 
-def find_password():
-    website_value = website_entry.get()
-    try:
-        with open('data.json', 'r') as data_file:
-            data = json.load(data_file)
-    except FileNotFoundError:
-        messagebox.showinfo(f"{website_value}", "No Data File Found")
-    else:
-        if website_value in data:
-            email = data[website_value]["email"]
-            password = data[website_value]["password"]
-            messagebox.showinfo(title=website_value, message=f"Email: {email}\nPassword: {password}")
-        else:
-            messagebox.showinfo(title="Error", message=f"No data for {website_value} exists.")
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
@@ -69,10 +55,10 @@ def save():
                 data = json.load(data_file)
         except FileNotFoundError:
             with open("data.json", "w") as data_file:
-                #Savin updated data
+                # Savin updated data
                 json.dump(new_data, data_file, indent=4)
         else:
-            #Updating old data with new data
+            # Updating old data with new data
             data.update(new_data)
             with open("data.json", "w") as data_file:
                 json.dump(data, data_file, indent=4)
@@ -80,6 +66,23 @@ def save():
             website_entry.delete(0, END)
             # username_entry.delete(0, "end")
             password_entry.delete(0, END)
+
+
+# ---------------------------- FIND PASSWORD ------------------------------- #
+def find_password():
+    website_value = website_entry.get()
+    try:
+        with open('data.json', 'r') as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(f"{website_value}", "No Data File Found")
+    else:
+        if website_value in data:
+            email = data[website_value]["email"]
+            password = data[website_value]["password"]
+            messagebox.showinfo(title=website_value, message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showinfo(title="Error", message=f"No data for {website_value} exists.")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
